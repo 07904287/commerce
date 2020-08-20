@@ -1,0 +1,15 @@
+body {
+    padding: 10px;
+}
+
+.listing{
+    border: 1px solid lightgrey;
+    border-radius: 5px;
+    margin-bottom: 5px;
+    padding: 10px;
+}
+
+.listing_image{
+    float:left;
+    margin-right:10px;
+}

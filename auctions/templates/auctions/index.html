@@ -1,0 +1,35 @@
+{% extends "auctions/layout.html" %}
+{% load static %}
+<link href="{% static 'auctions/style.css' %}" rel="stylesheet">
+
+{% block body %}
+    <h2>Active Listings</h2>
+
+    
+        {% for listing in listings %}
+        {% if listing.is_active %}
+        <a style="text-decoration: none; color:black" class ="listing_link" href="/listings/{{listing.id}}">
+        <div class="listing">
+
+        <img class="listing_image" height="100" src="{{listing.photo_URL}}">
+
+        <p style="display:block">
+            {{ listing.title }} 
+            
+          
+
+        </p>
+
+        <p>
+            {{ listing.description }}
+        </p>
+
+        <p>
+            Price: ${{ listing.current_bid }}
+        </p>
+        </div>
+        </a>
+        {% endif %}
+        {% endfor %}
+    
+{% endblock %}

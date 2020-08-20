@@ -1,0 +1,127 @@
+{% extends "auctions/layout.html" %}
+{% load static %}
+<link href="{% static 'auctions/style.css' %}" rel="stylesheet">
+
+{% block body %}
+    
+{% if listing.is_active %}
+
+
+{% if messages %}
+    
+        {% for message in messages %}
+        <p style="color: red;" {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</p>
+        {% endfor %}
+  
+    {% endif %}
+    
+        <div class="listing">
+
+        <img class="listing_image" height="100" src="{{listing.photo_URL}}">
+
+        <p style="display:block">
+            Listing: {{ listing.title }} 
+
+        </p>
+
+        {% if user.is_authenticated %}
+        <form action="{% url 'add_to_watchlist' listing.id%}" method="post">
+            {% csrf_token %}
+        <input type="submit", value="watchlist">
+        </form>
+        {% endif %}
+
+        <p>
+            {{ listing.description }}
+        </p>
+
+        {% if bid.bid %}
+        <p>
+            {{ number_of_bids }} bids so far.
+        </p>
+        <p>
+            ${{ bid.bid }}
+        </p>
+        {% else %}
+        <p>No bids yet</p>
+        {% endif %}
+
+        {% if user.is_authenticated %}
+        <form action="{% url 'bid' listing.id%}" method="post">
+            {% csrf_token %}
+        <input type="text", name="bid", placeholder="Your Bid">
+        <input type="submit", value="Place Bid">
+        </form>
+        {% endif %}
+<p style="margin-top:10px; font-weight: bold;">Details</p>
+<ul>
+    <li>Listing by: {{listing.user}}</li> 
+    <li>Category: {{listing.category}}</li>
+</ul>
+
+{% if user.is_authenticated %}
+        <form action="{% url 'comment' listing.id%}" method="post">
+            {% csrf_token %}
+        <input type="text", name="comment", placeholder="Your Comment">
+        <input type="submit", value="Submit Comment">
+        </form>
+        {% endif %}
+
+        <p>Comments:</p>
+{% for comment in comments %}
+
+<p>
+{{comment.comment}}
+</p>
+
+
+{% endfor %}
+
+{% if listing.user == user %}
+<form action="{% url 'close' listing.id%}" method="post">
+    {% csrf_token %}
+<input type="submit", value="Close listing">
+</form>
+
+{% endif %}
+
+
+{% else %}
+
+{% if listing.winner == user %}
+<p>Bidding closed, you won the item!</p>
+{% else %}
+<p>Bidding closed.</p>
+{% endif %}
+
+<div class="listing">
+
+    <img class="listing_image" height="100" src="{{listing.photo_URL}}">
+
+    <p style="display:block">
+        Listing: {{ listing.title }} 
+
+    </p>
+
+
+    <p>
+        {{ listing.description }}
+    </p>
+
+    {% if bid.bid %}
+    <p>
+        {{ number_of_bids }} bids so far.
+    </p>
+    <p>
+        ${{ bid.bid }}
+    </p>
+    {% else %}
+    <p>No bids yet</p>
+    {% endif %}
+
+{% endif %}
+
+        </div>
+        
+    
+{% endblock %}
